@@ -139,20 +139,24 @@ line) and `isReady(results): ReadyStatus`. Rules (starting values, tuned in the 
 PRD ref: `prd.md > The marked script`, `prd.md > Ready check`. Tests: `lib/marks.test.ts`.
 
 ### Review step — `components/ReviewStep.tsx`
-Sticky summary bar (counts + Ready status), take 1 audio player + "What the listener heard" transcript, legend,
-"Take 1 / Compare" switch, list of `MarkedLine`.
+Sticky summary bar (counts + Ready status for take 2 = take 1 with retaken lines replaced, `currentTake`), take 1
+audio player + "What the listener heard" transcript, legend, "Take 1" ("Take 2" once a line is retaken) / "Compare"
+switch, list of `MarkedLine`.
 PRD ref: `prd.md > The marked script`, `prd.md > Ready check`.
 
 ### Marked line — `components/MarkedLine.tsx`
-Renders one line: words with mark styles, filler/added chips and pause markers in place, tooltip "Heard: ___" /
-"Not heard", speed badge, Play, "Retake line" (records with `useRecorder`, aligns against this line only, stores in
-take 2).
+Renders one line: words with mark styles, the heard word shown under a red word (`<ruby>`), filler/added chips and
+pause markers in place, tooltip "Heard: ___" / "Not heard", click any word to hear it, speed badge (labelled only
+from 6 heard words — short lines swing too much), Play, "Retake line" (records with `useRecorder`, aligns against
+this line only, stores in take 2).
 PRD ref: `prd.md > Retake a line`.
 
 ### Compare view — `components/CompareView.tsx`
 Two columns per line (take 1 | take 2), "same as take 1" for lines not retaken, Play on each side.
-Line playback: one shared `<audio>`; take 1 seeks to the line's first heard word `start − 0.15 s` and stops at the
-last word `end + 0.25 s`; a retake plays its own clip.
+Playback (`lib/play.ts`): the recording is decoded once with Web Audio and segments are played from the buffer —
+Chrome's MediaRecorder webm has no seek index, so `<audio>` jumps are unreliable. Take 1 plays a line from its first
+heard word `start − 0.15 s` to the last word `end + 0.25 s`; a word plays `start − 0.3 s` to `end + 0.3 s`; a retake
+plays its own clip.
 PRD ref: `prd.md > Compare takes`.
 
 ### Storage — `lib/storage.ts`
@@ -213,6 +217,7 @@ retake/
 │   ├── align.ts              # word alignment (pure)
 │   ├── marks.ts              # marks, thresholds, Ready check (pure)
 │   ├── listen.ts             # client call to /api/listen
+│   ├── play.ts               # decode a take, play a line or word segment
 │   ├── storage.ts            # localStorage load/save
 │   ├── lines.test.ts         # node --test (sentences, number words)
 │   ├── align.test.ts         # node --test

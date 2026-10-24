@@ -54,8 +54,8 @@ The script text is the hero; the marks are the only strong colours on the page.
 
 ### The marked script
 The heart of the product. For every script word:
-- **Missed (red)** — the listener didn't hear it, or heard a different word. Hover / tap shows "Heard: ___" or
-  "Not heard".
+- **Missed (red)** — the listener didn't hear it, or heard a different word. The heard word is shown under it;
+  hover / tap shows "Heard: ___" or "Not heard". Click any word to hear exactly that part of your recording.
 - **Unclear (amber)** — the listener heard the right word but wasn't sure of it.
 - **Fillers (grey chip)** — "um", "uh" and filler phrases ("so basically", "you know", "actually", "like", "matlab")
   spoken but not in the script.

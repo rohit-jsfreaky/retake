@@ -32,6 +32,12 @@ export function speedLabel(wpm: number | null): "too fast" | "too slow" | null {
   return wpm > TOO_FAST ? "too fast" : wpm < TOO_SLOW ? "too slow" : null;
 }
 
+// A short line's rate swings with one breath, so lines under 6 heard words get no speed label.
+export const MIN_WORDS_FOR_SPEED = 6;
+export function lineSpeedLabel(r: LineResult) {
+  return r.heard.length >= MIN_WORDS_FOR_SPEED ? speedLabel(r.wpm) : null;
+}
+
 // Speaking time includes the natural break after a sentence; the 110-165 wpm band assumes those breaks.
 function speakingSeconds(r: Pick<LineResult, "heard" | "restAfter">): number {
   return r.heard.length < 2 ? 0 : r.heard.at(-1)!.end - r.heard[0].start + r.restAfter;
@@ -130,6 +136,11 @@ export function markTake(lines: Line[], heard: HeardWord[]): LineResult[] {
     const rest = last && next ? Math.min(LONG_PAUSE, Math.max(0, next.start - last.end)) : 0;
     return markLine(line, perLine[i], rest);
   });
+}
+
+// Take 2 = take 1 with every retaken line replaced.
+export function currentTake(take1: LineResult[], take2: Record<number, LineResult>): LineResult[] {
+  return take1.map((r, i) => take2[i] ?? r);
 }
 
 export function isReady(results: LineResult[]): ReadyStatus {

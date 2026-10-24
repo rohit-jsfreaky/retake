@@ -1,0 +1,14 @@
+{
+  "what": "Slice 3 real run through the UI: take 1 (Windows-voice clip with 'reader' for 'listener', an 'um' and a break) then 'Retake line' on line 2 with a clean clip; both recorded by Chrome MediaRecorder and checked by Deepgram via /api/listen. Screenshot: slice3-compare.png.",
+  "date": "2026-10-24",
+  "take1_heard": "hi i am rohit retake shows the three words a reader would miss um before i record my demo video",
+  "take1_summary": "Not yet: 1 missed word | Missed 1 | Fillers 1 | Pauses 1 (shown on line 2)",
+  "retake_line_2": "Only line 2 replaced (label 'Retaken'); line 1 unchanged and shown as 'Same as take 1' in Compare. The listener heard 'Retake' as 'retek' in the retake clip, shown under the red word.",
+  "playback": [
+    {"what": "click word 'Hi' (take 1)", "offset": 0, "duration": 1.02, "bufferSeconds": 10.5},
+    {"what": "click word 'video' (retake clip)", "offset": 4.18, "duration": 1, "bufferSeconds": 5.58},
+    {"what": "Play line 1 (take 1 segment)", "offset": 0, "duration": 2.17, "bufferSeconds": 10.5},
+    {"what": "Play line 2 (retake clip, whole)", "offset": 0, "duration": "all", "bufferSeconds": 5.58}
+  ],
+  "errors": []
+}

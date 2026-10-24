@@ -2,7 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { HeardWord } from "./align.ts";
 import { splitScript } from "./lines.ts";
-import { markTake, isReady } from "./marks.ts";
+import { align } from "./align.ts";
+import { markTake, markLine, isReady, currentTake, lineSpeedLabel } from "./marks.ts";
 
 // [word, start] pairs; each word lasts 0.3 s unless the next one starts sooner.
 function take(...pairs: [string, number, number?][]): HeardWord[] {
@@ -94,4 +95,21 @@ test("speed counts the break after a sentence, capped at a long pause", () => {
   // A 5 s stop between sentences only counts 1.2 s.
   const [first] = markTake(lines, take(...even("ship the demo today"), ...even("then rest a bit", 6.5)));
   assert.equal(first.restAfter, 1.2);
+});
+
+test("a clean retake replaces only its line and can make the take ready", () => {
+  const lines = splitScript("My product works well. Then rest a bit.");
+  const take1 = markTake(lines, take(...even("my pro works well"), ...even("then rest a bit", 2)));
+  assert.equal(isReady(take1).ready, false);
+  const retake = markLine(lines[0], align(lines[0].words, take(...even("my product works well"))), take1[0].restAfter);
+  const take2 = currentTake(take1, { 0: retake });
+  assert.equal(take2[1], take1[1]);
+  assert.ok(take2[0].words.every((w) => w.kind === "ok"));
+  assert.equal(isReady(take2).ready, true, isReady(take2).left.join());
+});
+
+test("short lines show wpm but no speed label", () => {
+  const [short] = markTake(splitScript("Hi, I am Rohit."), take(["hi", 0], ["i", 0.9], ["am", 1.8], ["rohit", 2.7]));
+  assert.ok(short.wpm! < 110);
+  assert.equal(lineSpeedLabel(short), null);
 });

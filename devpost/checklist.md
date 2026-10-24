@@ -30,7 +30,7 @@ one-line commit message, and waits for "next".
   Learner check: Record your real demo script. Swap one word on purpose, say "umm" once, stop for 2 seconds mid-sentence — see each one marked in the right place.
   Commit: `Mark the script: missed, unclear, fillers, pauses, speed, Ready`
 
-- [ ] **3. Retake a line and compare**
+- [x] **3. Retake a line and compare**
   Becomes usable: Any line has "Retake line"; the new result replaces that line in take 2. A Compare view shows take 1 vs take 2 per line, "same as take 1" for untouched lines, and Play on both sides.
   Why now: Retaking only marked lines is the time saver in the kernel; it needs the marks from slice 2.
   PRD ref: `prd.md > Retake a line`, `prd.md > Compare takes`, `prd.md > Ready check`
@@ -62,8 +62,13 @@ one-line commit message, and waits for "next".
 
 ## Hands-on Checkpoints
 
-- [ ] Early usable behavior explored — after slice 2: learner records his real script, judges the marks, tunes thresholds, and then designs the final UI himself
+- [x] Early usable behavior explored — after slice 2: learner records his real script, judges the marks, tunes thresholds, and then designs the final UI himself
 - [ ] Final kick-the-tires exploration and feedback completed
+
+Checkpoint 1 (24 Oct): learner's first real take came back almost empty (mic not picking him up) → added mic name +
+level bar, recording playback and the heard transcript; second take worked and surfaced two bugs ("grey"/"gray",
+speed without breaks) — fixed — and real misses ("fillers" → "pillers", "chips" → "tips"). He asked to keep
+building; the UI design comes later.
 
 ## Final Review
 
@@ -89,3 +94,6 @@ Activity mode:
 - Review step shows the recording + the full heard transcript, and the Read step shows the mic name + a live level bar — learner's first real take came back almost empty (only "hi" heard, 93 missed) and he could not tell whether audio was recorded; he asked to hear it and see the transcript.
 - Speed now counts the break after each sentence (capped at 1.2 s) — the learner's first real take showed every line "too fast" (187 wpm) when his real pace was ~169 wpm (93 words in 33 s); timing only the words inflates the rate, and the 110–165 band assumes breaks are counted.
 - British spellings map to US spelling in `normalise` — the real take marked "Grey" red because Deepgram wrote "gray".
+- Playback decodes the recording with Web Audio (`lib/play.ts`) instead of seeking one `<audio>` — Chrome's MediaRecorder webm has no seek index, so jumping to a line's time is unreliable; a decoded buffer plays exact segments.
+- The heard word is shown under each red word and any word can be clicked to hear it — after checkpoint 1 the learner felt red words were "said clearly"; hearing exactly what the listener heard answers that (learner agreed).
+- Line speed is labelled only from 6 heard words — a 4-word greeting showed "too slow" because one breath swings a short line's rate.
