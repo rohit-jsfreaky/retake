@@ -77,8 +77,11 @@ direction for the landing page himself.
 
 ## Components
 
-### Page shell and steps — `app/page.tsx`
-Holds the session state and which step is showing (Script → Read → Review). Loads/saves through `lib/storage.ts`.
+### Page shell and steps — `app/practice/page.tsx` + `components/AppShell.tsx`
+Holds the session state, which step is showing (Script → Read → Review) and which take is shown (Take 1 / Take 2 /
+Compare). Renders `AppFrame` (window chrome) with `AppSidebar` (New script, steps, takes, Try the sample, Home). The
+landing page renders the same `AppFrame` + `AppSidebar` + `TakeSummary` + `MarkedLine` with the sample, so the home page
+shows the real app. Loads/saves through `lib/storage.ts`.
 PRD ref: `prd.md > Screens and Layout`.
 
 ### Script step — `components/ScriptStep.tsx`
@@ -215,6 +218,8 @@ retake/
 │   ├── ReviewStep.tsx        # summary bar, legend, Take 1 / Compare switch
 │   ├── MarkedLine.tsx        # one line: marks, chips, pauses, speed, play, retake
 │   ├── CompareView.tsx
+│   ├── AppShell.tsx          # app window frame + sidebar (used by /practice and the landing hero)
+│   ├── TakeSummary.tsx       # Ready / not-yet line with the mark counts
 │   ├── useRecorder.ts        # mic + MediaRecorder hook
 │   └── ui.tsx                # shared pill buttons, cards, step header, window frame
 ├── lib/

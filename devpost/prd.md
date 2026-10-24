@@ -25,7 +25,9 @@ Source: `scope.md > The Unique Kernel`, `scope.md > Who It's For`.
    and record the real thing with confidence.
 
 ## Screens and Layout
-One page that moves through three steps (a step bar shows where you are: Script → Read → Review).
+A landing page (`/`) and the app (`/practice`). The app is one window with a sidebar — New script, the three steps
+(Script → Read → Review), the takes (Take 1, Take 2, Compare) and Try the sample — and a work area for the current step.
+The landing page shows this same window with the real sample.
 - **Script step** — headline (what + who), a large text box, word count, "Start reading" button, "Try the sample".
 - **Read step** — the script in big readable type, a Record / Stop button, a timer, the mic's name and a live level
   bar (with "we can't hear you" after 2 quiet seconds). "Back to script" link.

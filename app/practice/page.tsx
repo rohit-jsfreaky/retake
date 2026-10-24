@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ScriptStep } from "@/components/ScriptStep";
 import { ReadStep } from "@/components/ReadStep";
 import { ReviewStep } from "@/components/ReviewStep";
-import { Nav } from "@/components/landing/Nav";
+import { AppFrame, AppSidebar, STEP_NAME, VIEW_NAME, type Step, type View } from "@/components/AppShell";
 import { Pill } from "@/components/ui";
 import { AlertCircle } from "@untitledui/icons";
 import { align } from "@/lib/align";
@@ -19,7 +19,8 @@ const LISTENER_DOWN = "Couldn't check this take. Your recording is kept — try 
 
 export default function Home() {
   const [loaded, setLoaded] = useState(false);
-  const [step, setStep] = useState<"script" | "read" | "review">("script");
+  const [step, setStep] = useState<Step>("script");
+  const [view, setView] = useState<View>("take1");
   const [script, setScript] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -40,6 +41,7 @@ export default function Home() {
       setScript(saved.script);
       setTake1(saved.take1);
       setTake2(saved.take2 ?? {});
+      if (Object.keys(saved.take2 ?? {}).length) setView("take2");
       if (saved.take1) setStep("review");
     }
     setLoaded(true);
@@ -75,6 +77,7 @@ export default function Home() {
       setTake2({});
       setTake2Audio({});
       setTake1(markTake(lines, heard));
+      setView("take1");
       setStep("review");
     } catch (e) {
       fail(failure(e), audio, null);
@@ -95,6 +98,7 @@ export default function Home() {
       if (take2Audio[i]) forgetClip(take2Audio[i]);
       setTake2((t) => ({ ...t, [i]: result }));
       setTake2Audio((a) => ({ ...a, [i]: URL.createObjectURL(audio) }));
+      setView("take2");
     } catch (e) {
       fail(failure(e), audio, i);
     } finally {
@@ -120,13 +124,16 @@ export default function Home() {
       setTake1Audio(session.take1Audio);
       setTake2Audio(session.take2Audio);
       setSample(true);
+      setView(Object.keys(session.take2).length ? "take2" : "take1");
       setStep("review");
     } catch {
       setError("The sample couldn't be opened. Try again in a moment.");
     }
   }
 
-  function leaveSample() {
+  // Starts over with an empty script. The sample is simply left; your own work is only cleared after asking.
+  function newScript() {
+    if (!sample && (take1 || script.trim()) && !window.confirm("Start a new script? This clears your current script and takes.")) return;
     forgetAudio();
     setSample(false);
     setScript("");
@@ -143,45 +150,68 @@ export default function Home() {
     else onRetake(failed.line, failed.audio);
   }
 
+  const retakes = Object.keys(take2).length;
+  const takeSeconds = take1 ? Math.max(0, ...take1.flatMap((r) => r.heard.map((w) => w.end))) : undefined;
+  const title = step === "review" ? `Review · ${VIEW_NAME[retakes ? view : "take1"]}${sample ? " · Sample" : ""}` : STEP_NAME[step];
+
   return (
-    <>
-    <Nav />
-    <main className="mx-auto w-full max-w-[1080px] px-4 pb-24 pt-32">
-      {error && (
-        <div role="alert" className="mx-auto mb-10 flex max-w-[640px] flex-wrap items-center gap-4 rounded-2xl bg-[#FEF3F2] p-5 shadow-[var(--shadow-float)]">
-          <AlertCircle size={20} className="text-[#D92D20]" />
-          <span className="flex-1">{error}</span>
-          {failed && (
-            <Pill size="sm" disabled={busy || busyLine !== null} onClick={tryAgain}>
-              Try again
-            </Pill>
-          )}
-        </div>
-      )}
-      {step === "script" && (
-        <ScriptStep script={script} lines={lines} onChange={setScript} onStart={() => setStep("read")} onSample={openSample} />
-      )}
-      {step === "read" && <ReadStep lines={lines} busy={busy} onBack={() => setStep("script")} onTake={onTake} onSample={openSample} />}
-      {step === "review" && take1 && (
-        <ReviewStep
-          lines={lines}
-          take1={take1}
-          take2={take2}
-          take1Audio={take1Audio}
-          take2Audio={take2Audio}
-          busyLine={busyLine}
-          sample={sample}
-          onRetake={onRetake}
-          onReadAgain={() => setStep("read")}
-          onEdit={sample ? leaveSample : () => setStep("script")}
-          onExport={
-            process.env.NODE_ENV === "development" && !sample && take1Audio
-              ? () => exportSample(script, take1, take2, take1Audio, take2Audio)
-              : undefined
-          }
-        />
-      )}
-    </main>
-    </>
+    <div className="paper flex h-dvh flex-col bg-[linear-gradient(in_oklab,var(--sky-from),var(--sky-to))] p-3 md:p-5">
+      <AppFrame
+        className="min-h-0 flex-1"
+        title={title}
+        sidebar={
+          <AppSidebar
+            step={step}
+            view={retakes ? view : "take1"}
+            canRead={lines.length > 0}
+            canReview={Boolean(take1)}
+            takeSeconds={takeSeconds}
+            retakes={retakes}
+            sample={sample}
+            onNew={newScript}
+            onStep={setStep}
+            onView={(v) => {
+              setView(v);
+              setStep("review");
+            }}
+            onSample={openSample}
+          />
+        }
+      >
+        {error && (
+          <div role="alert" className="m-6 mb-0 flex flex-wrap items-center gap-4 rounded-2xl bg-[#FEF3F2] p-4 md:mx-8">
+            <AlertCircle size={20} className="text-[#D92D20]" />
+            <span className="flex-1">{error}</span>
+            {failed && (
+              <Pill size="sm" disabled={busy || busyLine !== null} onClick={tryAgain}>
+                Try again
+              </Pill>
+            )}
+          </div>
+        )}
+        {step === "script" && <ScriptStep script={script} lines={lines} onChange={setScript} onStart={() => setStep("read")} />}
+        {step === "read" && <ReadStep lines={lines} busy={busy} onTake={onTake} onSample={openSample} />}
+        {step === "review" && take1 && (
+          <ReviewStep
+            lines={lines}
+            take1={take1}
+            take2={take2}
+            take1Audio={take1Audio}
+            take2Audio={take2Audio}
+            view={retakes ? view : "take1"}
+            busyLine={busyLine}
+            sample={sample}
+            onRetake={onRetake}
+            onReadAgain={() => setStep("read")}
+            onEdit={sample ? newScript : () => setStep("script")}
+            onExport={
+              process.env.NODE_ENV === "development" && !sample && take1Audio
+                ? () => exportSample(script, take1, take2, take1Audio, take2Audio)
+                : undefined
+            }
+          />
+        )}
+      </AppFrame>
+    </div>
   );
 }

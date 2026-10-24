@@ -14,7 +14,6 @@ import {
   Briefcase01,
   CheckCircle,
   Clock,
-  Edit05,
   Globe01,
   Lock01,
   Microphone01,
@@ -26,7 +25,9 @@ import {
   VolumeMax,
   Zap,
 } from "@untitledui/icons";
+import { AppFrame, AppSidebar } from "@/components/AppShell";
 import { MarkedLine } from "@/components/MarkedLine";
+import { TakeSummary } from "@/components/TakeSummary";
 import { Logo, Nav, PRACTISE, SAMPLE } from "@/components/landing/Nav";
 import { Reveal } from "@/components/landing/Reveal";
 import {
@@ -35,7 +36,6 @@ import {
   markedLines,
   missedExample,
   retakenLine,
-  status1,
   status2,
   take1,
   take2,
@@ -168,39 +168,21 @@ export default function Landing() {
             <Image src={cloud} alt="" priority className="pointer-events-none absolute -right-24 top-24 w-[340px] -scale-x-100 opacity-90" />
             <Image src={collage} alt="" priority className="pointer-events-none absolute -bottom-[88px] left-1/2 w-[1700px] max-w-none -translate-x-1/2" />
             <Reveal delay={0.2} className="relative z-10 mx-auto mt-24 w-full max-w-[880px] px-4">
-              <div className="overflow-hidden rounded-t-[20px] bg-white shadow-[0_-10px_40px_rgba(0,0,0,0.08)]">
-                <div className="flex items-center gap-2 border-b border-line px-4 py-3">
-                  <span className="flex gap-1.5">
-                    <i className="size-3 rounded-full bg-[#FF5F57]" />
-                    <i className="size-3 rounded-full bg-[#FEBC2E]" />
-                    <i className="size-3 rounded-full bg-[#28C840]" />
-                  </span>
-                  <span className="mx-auto rounded-md bg-panel px-3 py-0.5 text-xs text-subtle">Review · Take 1</span>
+              {/* The real app window (same components as /practice), showing the sample's first take. */}
+              <AppFrame
+                className="rounded-b-none text-left"
+                title="Review · Take 1 · Sample"
+                sidebar={<AppSidebar step="review" view="take1" canRead canReview takeSeconds={takeSeconds} retakes={Object.keys(take2).length} />}
+              >
+                <div className="border-b border-line px-6 py-4 md:px-8">
+                  <TakeSummary results={take1} />
                 </div>
-                <div className="grid grid-cols-[180px_1fr] text-left">
-                  <aside className="hidden border-r border-line bg-[#FAFAFA] p-4 text-[13px] sm:block">
-                    <p className="flex items-center gap-2 py-1"><Edit05 size={14} /> New script</p>
-                    <p className="mt-3 text-xs font-semibold text-subtle">Steps</p>
-                    <p className="py-1">Script</p>
-                    <p className="py-1">Read</p>
-                    <p className="-mx-2 rounded-md bg-panel px-2 py-1 font-medium">Review</p>
-                    <p className="mt-3 text-xs font-semibold text-subtle">Takes</p>
-                    <p className="py-1">Take 1 · {clock(takeSeconds)}</p>
-                    <p className="py-1">Take 2 · {Object.keys(take2).length} lines</p>
-                  </aside>
-                  <div className="px-6 pb-2 pt-4">
-                    <div className="flex flex-wrap gap-2 text-xs">
-                      <span className="rounded-full bg-[#FEE4E2] px-2.5 py-1 text-[#B42318]">{status1.missed} missed</span>
-                      <span className="rounded-full bg-[#FEF0C7] px-2.5 py-1 text-[#B54708]">{status1.unclear} unclear</span>
-                      <span className="rounded-full bg-panel px-2.5 py-1">{status1.added} added</span>
-                      <span className="rounded-full bg-panel px-2.5 py-1 font-mono">{status1.wpm} wpm</span>
-                    </div>
-                    {markedLines.slice(0, 3).map((i) => (
-                      <MarkedLine key={i} line={lines[i]} result={take1[i]} audioUrl={null} wholeClip={false} />
-                    ))}
-                  </div>
+                <div className="px-6 md:px-8">
+                  {markedLines.slice(0, 3).map((i) => (
+                    <MarkedLine key={i} line={lines[i]} result={take1[i]} audioUrl={null} wholeClip={false} />
+                  ))}
                 </div>
-              </div>
+              </AppFrame>
             </Reveal>
           </div>
         </section>
