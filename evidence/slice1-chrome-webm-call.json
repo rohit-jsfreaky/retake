@@ -1,0 +1,35 @@
+{
+  "what": "Slice 1 real call: Chrome MediaRecorder (Playwright Chrome, 32 kbps) recorded a Windows-voice clip, POSTed to /api/listen -> Deepgram nova-3, filler_words=true, no smart_format.",
+  "date": "2026-10-24",
+  "spoken_text": "Hi, I am Rohit. Retake shows the 3 words a listener would miss, before I record my demo video.",
+  "mimeType": "audio/webm;codecs=opus",
+  "bytes": 27097,
+  "seconds": 7.903,
+  "status": 200,
+  "findings": [
+    "Deepgram accepts Chrome's audio/webm;codecs=opus as-is.",
+    "The digit '3' in the script came back as the word 'three' (numbers are words without smart_format).",
+    "No punctuated_word field without punctuate/smart_format; words are lowercase."
+  ],
+  "words": [
+    {"word":"hi","start":0,"end":0.71999997,"confidence":0.95825195},
+    {"word":"i","start":0.71999997,"end":0.96,"confidence":0.99902344},
+    {"word":"am","start":0.96,"end":1.12,"confidence":0.9790039},
+    {"word":"rohit","start":1.12,"end":1.9199998,"confidence":0.98844403},
+    {"word":"retake","start":2.32,"end":2.8799999,"confidence":0.8203125},
+    {"word":"shows","start":2.8799999,"end":3.12,"confidence":0.99902344},
+    {"word":"the","start":3.12,"end":3.36,"confidence":0.9980469},
+    {"word":"three","start":3.36,"end":3.52,"confidence":1},
+    {"word":"words","start":3.52,"end":3.76,"confidence":1},
+    {"word":"a","start":3.76,"end":4,"confidence":0.9892578},
+    {"word":"listener","start":4,"end":4.3199997,"confidence":1},
+    {"word":"would","start":4.3199997,"end":4.64,"confidence":1},
+    {"word":"miss","start":4.64,"end":5.2,"confidence":0.99902344},
+    {"word":"before","start":5.2,"end":5.6,"confidence":0.96972656},
+    {"word":"i","start":5.6,"end":5.8399997,"confidence":0.99902344},
+    {"word":"record","start":5.8399997,"end":6.16,"confidence":1},
+    {"word":"my","start":6.16,"end":6.3999996,"confidence":1},
+    {"word":"demo","start":6.3999996,"end":6.7999997,"confidence":1},
+    {"word":"video","start":6.7999997,"end":7.2,"confidence":0.9995117}
+  ]
+}
