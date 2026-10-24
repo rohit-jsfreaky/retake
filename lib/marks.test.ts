@@ -91,7 +91,7 @@ test("speed counts the break after a sentence, capped at a long pause", () => {
   const results = markTake(lines, take(...even("ship the demo today"), ...even("then rest a bit", 2)));
   assert.ok(Math.abs(results[0].restAfter - 0.5) < 1e-9);
   assert.equal(results[0].wpm, 120);
-  assert.equal(results[1].restAfter, 0); // last line: nothing after it
+  assert.ok(Math.abs(results[1].restAfter - 0.5) < 1e-9); // last line: the usual break
   // A 5 s stop between sentences only counts 1.2 s.
   const [first] = markTake(lines, take(...even("ship the demo today"), ...even("then rest a bit", 6.5)));
   assert.equal(first.restAfter, 1.2);

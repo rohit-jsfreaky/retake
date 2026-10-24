@@ -50,7 +50,7 @@ one-line commit message, and waits for "next".
   Learner check: Reload mid-review, then block the mic in Chrome site settings and try to record.
   Commit: `Keep the session on reload and handle mic, silence and network failures`
 
-- [ ] **5. Sample mode**
+- [x] **5. Sample mode**
   Becomes usable: "Try the sample" opens a real session of the learner's voice (take 1 with marks, take 2 after retakes), labelled "Sample", with no mic and no API call.
   Why now: Judges need it, and it can only be made from a real session once slices 2–4 exist.
   PRD ref: `prd.md > Sample mode`
@@ -59,7 +59,7 @@ one-line commit message, and waits for "next".
   Verify (mechanical): `npm run build` passes; with the mic blocked and no network call to `/api/listen`, the sample shows marks, plays lines and compares takes.
   Learner check: Record your real sample, export it, then open the app in a fresh tab and press "Try the sample".
   Commit: `Add sample mode from a real recorded session`
-  Status: mechanism built, verified and committed with a test session (`evidence/slice5-sample-roundtrip.json`); box stays open until the learner exports his real `public/sample/sample.json` and it is checked.
+  Status: real sample (learner's voice, 32 s take 1 + 3 retaken lines) exported 24 Oct and checked with the mic blocked: 0 `/api/listen` calls, playback and Compare work, visitor's saved session untouched.
 
 ## Hands-on Checkpoints
 
@@ -99,3 +99,4 @@ Activity mode:
 - The heard word is shown under each red word and any word can be clicked to hear it — after checkpoint 1 the learner felt red words were "said clearly"; hearing exactly what the listener heard answers that (learner agreed).
 - Line speed is labelled only from 6 heard words — a 4-word greeting showed "too slow" because one breath swings a short line's rate.
 - `/api/listen` turns Deepgram's 400 into 422 "No speech" — a recording with no sound reaches Deepgram as a ~110-byte file that it rejects as "corrupt or unsupported data"; without this, a silent take said "try again", which can never help.
+- The last line's speed now uses the reader's usual break between sentences — it had none, so it always looked faster (the real sample's last line showed 278 wpm).

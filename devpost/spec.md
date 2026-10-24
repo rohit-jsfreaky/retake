@@ -133,7 +133,7 @@ line) and `isReady(results): ReadyStatus`. Rules (starting values, tuned in the 
 - **Added:** every other `added` word.
 - **Long pause:** gap between two heard words `≥ 1.2 s`, where the earlier script word does not end a sentence.
 - **Speed:** heard words ÷ speaking time × 60, where a line's speaking time = its first word start → last word end
-  **plus the break before the next line** (capped at 1.2 s); overall = summed over lines. "Too fast" above 165 wpm,
+  **plus the break before the next line** (capped at 1.2 s; the last line gets the reader's average break); overall = summed over lines. "Too fast" above 165 wpm,
   "too slow" below 110 wpm — that band assumes the natural breaks are counted.
 - **Ready:** no missed, no fillers, no long pauses, overall speed inside the band. Unclear words are shown but don't
   block Ready.

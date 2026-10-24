@@ -130,12 +130,15 @@ export function markTake(lines: Line[], heard: HeardWord[]): LineResult[] {
   perLine[lines.length - 1].push(...waiting);
 
   const heardIn = perLine.map((steps) => steps.flatMap((s) => (s.kind === "missed" ? [] : [s.heard])));
-  return lines.map((line, i) => {
-    const last = heardIn[i].at(-1);
+  const rests: (number | null)[] = heardIn.map((heard, i) => {
+    const last = heard.at(-1);
     const next = heardIn.slice(i + 1).find((h) => h.length)?.[0];
-    const rest = last && next ? Math.min(LONG_PAUSE, Math.max(0, next.start - last.end)) : 0;
-    return markLine(line, perLine[i], rest);
+    return last && next ? Math.min(LONG_PAUSE, Math.max(0, next.start - last.end)) : null;
   });
+  // The last line has no next line; give it the reader's usual break so its speed isn't inflated.
+  const known = rests.filter((r): r is number => r !== null);
+  const usual = known.length ? known.reduce((a, b) => a + b, 0) / known.length : 0;
+  return lines.map((line, i) => markLine(line, perLine[i], rests[i] ?? usual));
 }
 
 // Take 2 = take 1 with every retaken line replaced.
