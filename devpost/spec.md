@@ -116,11 +116,12 @@ PRD ref: `prd.md > Script input`.
 ### Aligner — `lib/align.ts`
 `align(scriptWords: string[], heard: HeardWord[]): Step[]` — word-level edit distance (Levenshtein) with a backtrace.
 Each step is `match` (same word), `swap` (script word ↔ different heard word), `missed` (script word, nothing heard) or
-`added` (heard word not in script). Pure function, no imports.
+`added` (heard word not in script); steps carry the heard word. Pure function; only imports `normalise` from `lines.ts`.
 PRD ref: `prd.md > The marked script`. Tests: `lib/align.test.ts`.
 
 ### Marker — `lib/marks.ts`
-`markLine(line, steps): LineResult` and `isReady(lines): ReadyStatus`. Rules (starting values, tuned in the build):
+`markLine(line, steps): LineResult`, `markTake(lines, heard): LineResult[]` (whole take aligned once, then split per
+line) and `isReady(results): ReadyStatus`. Rules (starting values, tuned in the build):
 - **Missed (red):** `missed` or `swap` steps; a swap stores what was heard.
 - **Unclear (amber):** `match` with confidence `< 0.65` (Deepgram's docs suggest ~0.65 as a reliable error cut-off).
 - **Filler:** `added` words in `FILLERS` = Deepgram's filler set (`uh`, `um`, `mhmm`, `mm-mm`, `uh-uh`, `uh-huh`,
@@ -165,7 +166,8 @@ All in the browser. No database.
 
 ```ts
 type HeardWord = { word: string; start: number; end: number; confidence: number; punctuated_word?: string }
-type Line = { index: number; text: string; words: string[]; endsSentence: boolean[] }
+type Line = { index: number; text: string; words: string[]; shown: string[]; endsSentence: boolean[] }
+// shown[i] = the script text for words[i]; "" when it is part of the word before ("$200" -> two, hundred, dollars)
 type WordMark = { script: string; kind: 'ok' | 'missed' | 'unclear'; heard?: string; start?: number; end?: number }
 type Insert = { afterWord: number; text: string; kind: 'filler' | 'added' }
 type Pause = { afterWord: number; seconds: number }
@@ -206,6 +208,7 @@ retake/
 │   ├── marks.ts              # marks, thresholds, Ready check (pure)
 │   ├── listen.ts             # client call to /api/listen
 │   ├── storage.ts            # localStorage load/save
+│   ├── lines.test.ts         # node --test (sentences, number words)
 │   ├── align.test.ts         # node --test
 │   └── marks.test.ts         # node --test
 ├── public/sample/sample.json # real sample session (words + audio)

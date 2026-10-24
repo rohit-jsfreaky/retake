@@ -1,0 +1,37 @@
+{
+  "what": "Slice 2 real take through the real UI: script pasted, Record/Stop pressed; the mic was replaced by a Windows-voice clip played into Chrome's MediaRecorder (audio/webm;codecs=opus). Deepgram nova-3, filler_words=true. Screenshot: slice2-marked-take.png.",
+  "date": "2026-10-24",
+  "script": "Hi, I am Rohit. Retake shows the 3 words a listener would miss, before I record my demo video.",
+  "spoken": "Hi, I am Rohit. Retake shows the 3 words a reader would miss, um, before I record my <2 s break> demo video.",
+  "screen": {
+    "summary": "Not yet: 1 missed word, 1 filler, 1 long pause | Missed 1 | Unclear 0 | Fillers 1 | Added 0 | Pauses 1 | 127 wpm",
+    "marks": ["listener -> Heard: reader", "um -> Filler", "‖ 1.5 s -> Long pause (after 'my')"],
+    "line_speeds": ["125 wpm", "128 wpm"]
+  },
+  "notes": [
+    "The 2 s SSML break measured 1.5 s: Deepgram stretched 'my' to end at 7.44 s.",
+    "'miss' came back at confidence 0.78, above the 0.65 unclear cut-off."
+  ],
+  "words": [
+    {"word":"hi","start":0,"end":0.71999997,"confidence":0.9477539},
+    {"word":"i","start":0.71999997,"end":0.96,"confidence":0.99902344},
+    {"word":"am","start":0.96,"end":1.12,"confidence":0.97314453},
+    {"word":"rohit","start":1.12,"end":1.9199998,"confidence":0.9864909},
+    {"word":"retake","start":2.32,"end":2.8799999,"confidence":0.88916016},
+    {"word":"shows","start":2.8799999,"end":3.12,"confidence":0.99902344},
+    {"word":"the","start":3.12,"end":3.36,"confidence":0.9980469},
+    {"word":"three","start":3.36,"end":3.52,"confidence":1},
+    {"word":"words","start":3.52,"end":3.84,"confidence":1},
+    {"word":"a","start":3.84,"end":4,"confidence":0.9614258},
+    {"word":"reader","start":4,"end":4.24,"confidence":1},
+    {"word":"would","start":4.24,"end":4.48,"confidence":0.99902344},
+    {"word":"miss","start":4.48,"end":5.12,"confidence":0.77905273},
+    {"word":"um","start":5.12,"end":5.6,"confidence":0.94018555},
+    {"word":"before","start":5.6,"end":6.16,"confidence":0.99902344},
+    {"word":"i","start":6.16,"end":6.3999996,"confidence":0.9970703},
+    {"word":"record","start":6.3999996,"end":6.72,"confidence":1},
+    {"word":"my","start":6.72,"end":7.44,"confidence":0.99902344},
+    {"word":"demo","start":8.96,"end":9.36,"confidence":0.97802734},
+    {"word":"video","start":9.36,"end":9.84,"confidence":0.9951172}
+  ]
+}

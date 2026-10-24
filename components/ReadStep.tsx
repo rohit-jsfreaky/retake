@@ -1,7 +1,8 @@
 "use client";
+import type { Line } from "@/lib/lines";
 import { useRecorder } from "./useRecorder";
 
-export function ReadStep({ script, busy, onBack, onTake }: { script: string; busy: boolean; onBack: () => void; onTake: (audio: Blob) => void }) {
+export function ReadStep({ lines, busy, onBack, onTake }: { lines: Line[]; busy: boolean; onBack: () => void; onTake: (audio: Blob) => void }) {
   const { recording, seconds, blocked, start, stop } = useRecorder();
 
   return (
@@ -9,7 +10,11 @@ export function ReadStep({ script, busy, onBack, onTake }: { script: string; bus
       <button className="self-start text-muted underline" onClick={onBack} disabled={recording || busy}>
         Back to script
       </button>
-      <p className="whitespace-pre-wrap text-2xl leading-relaxed">{script}</p>
+      <div className="flex flex-col gap-3 text-2xl leading-relaxed">
+        {lines.map((l) => (
+          <p key={l.index}>{l.text}</p>
+        ))}
+      </div>
       <div className="flex items-center gap-4">
         {recording ? (
           <button className="rounded-lg bg-accent px-5 py-2.5 text-white" onClick={async () => onTake(await stop())}>

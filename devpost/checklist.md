@@ -20,7 +20,7 @@ one-line commit message, and waits for "next".
   Learner check: Run `npm run dev`, open http://localhost:3000, paste two sentences, record yourself, and see the heard words appear.
   Commit: `Record a take and get heard words from Deepgram`
 
-- [ ] **2. The marked script**
+- [x] **2. The marked script**
   Becomes usable: After a take, the Review step shows the script with red (missed / heard as something else, with "Heard: ___"), amber (unclear), filler and added chips, pause markers, speed per line, a summary bar and the Ready status.
   Why now: This is the unique kernel — it comes right after the listener works, before any extras.
   PRD ref: `prd.md > The marked script`, `prd.md > Ready check`, `prd.md > Script input`
@@ -84,3 +84,5 @@ Activity mode:
 ## Revisions
 
 - `lib/lines.ts` spells out plain numbers as words for comparing only (display text unchanged); years read as "twenty twenty six" may still show red, accepted for the POC — Deepgram's Smart Format page shows numbers come back as spoken words when `smart_format` is off, so script digits would never match.
+- `Line` gained `shown` (display text per compared word) and a `lib/lines.test.ts` was added — the number fix makes one shown word ("$200") stand for several compared words, so the display needs its own list, and the number converter is new logic that needs a test.
+- Added words between two sentences go with the next sentence (`markTake`) — an "um" before a sentence belongs to it; the spec only said "the line they fall inside".
