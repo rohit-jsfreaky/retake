@@ -83,3 +83,15 @@ test("nothing heard: every word missed, not ready", () => {
   assert.ok(results[0].words.every((w) => w.kind === "missed"));
   assert.equal(isReady(results).ready, false);
 });
+
+test("speed counts the break after a sentence, capped at a long pause", () => {
+  // 4 words over 1.5 s, then 0.5 s before the next sentence: 4 / 2.0 s = 120 wpm, not 160.
+  const lines = splitScript("Ship the demo today. Then rest a bit.");
+  const results = markTake(lines, take(...even("ship the demo today"), ...even("then rest a bit", 2)));
+  assert.ok(Math.abs(results[0].restAfter - 0.5) < 1e-9);
+  assert.equal(results[0].wpm, 120);
+  assert.equal(results[1].restAfter, 0); // last line: nothing after it
+  // A 5 s stop between sentences only counts 1.2 s.
+  const [first] = markTake(lines, take(...even("ship the demo today"), ...even("then rest a bit", 6.5)));
+  assert.equal(first.restAfter, 1.2);
+});

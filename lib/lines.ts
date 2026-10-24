@@ -8,8 +8,21 @@ export type Line = {
 
 export const MAX_WORDS = 600;
 
+// Deepgram writes US spelling; scripts (Indian, British English) often don't. Both sides map to one spelling.
+// shortcut: a fixed list of common words, extend it when a real take shows another one.
+const SPELLING: Record<string, string> = {
+  grey: "gray", greys: "grays", colour: "color", colours: "colors", favourite: "favorite", favourites: "favorites",
+  centre: "center", centres: "centers", metre: "meter", metres: "meters", theatre: "theater",
+  practise: "practice", practised: "practiced", practising: "practicing", behaviour: "behavior", honour: "honor",
+  labour: "labor", neighbour: "neighbor", programme: "program", programmes: "programs",
+  organise: "organize", organised: "organized", organisation: "organization", realise: "realize", realised: "realized",
+  recognise: "recognize", recognised: "recognized", analyse: "analyze", analysed: "analyzed", optimise: "optimize",
+  travelling: "traveling", travelled: "traveled", cancelled: "canceled", modelling: "modeling", ok: "okay",
+};
+
 export function normalise(word: string): string {
-  return word.toLowerCase().replace(/[’‘]/g, "'").replace(/[^a-z0-9']/g, "").replace(/^'+|'+$/g, "");
+  const w = word.toLowerCase().replace(/[’‘]/g, "'").replace(/[^a-z0-9']/g, "").replace(/^'+|'+$/g, "");
+  return SPELLING[w] ?? w;
 }
 
 const ONES = "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen".split(" ");

@@ -27,8 +27,10 @@ Source: `scope.md > The Unique Kernel`, `scope.md > Who It's For`.
 ## Screens and Layout
 One page that moves through three steps (a step bar shows where you are: Script → Read → Review).
 - **Script step** — headline (what + who), a large text box, word count, "Start reading" button, "Try the sample".
-- **Read step** — the script in big readable type, a Record / Stop button, a timer. "Back to script" link.
-- **Review step** — summary bar at the top (counts + Ready status), the marked script line by line in the middle, a
+- **Read step** — the script in big readable type, a Record / Stop button, a timer, the mic's name and a live level
+  bar (with "we can't hear you" after 2 quiet seconds). "Back to script" link.
+- **Review step** — summary bar at the top (counts + Ready status), your recording to play back and "What the listener
+  heard" (the full transcript), the marked script line by line in the middle, a
   legend that explains each mark, and a "Take 1 / Compare" switch. Each line: its marks, speed badge, play button,
   "Retake line" button.
 

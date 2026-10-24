@@ -1,9 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { align, type HeardWord } from "./align.ts";
+import { normalise } from "./lines.ts";
 
 const heard = (...words: string[]): HeardWord[] => words.map((word, i) => ({ word, start: i, end: i + 0.5, confidence: 0.99 }));
-const kinds = (script: string, ...said: string[]) => align(script.split(" "), heard(...said)).map((s) => s.kind);
+const kinds = (script: string, ...said: string[]) => align(script.split(" ").map(normalise), heard(...said)).map((s) => s.kind);
 
 test("every word heard", () => {
   assert.deepEqual(kinds("ship the demo", "ship", "the", "demo"), ["match", "match", "match"]);
@@ -35,4 +36,9 @@ test("heard words are compared case and punctuation free", () => {
 
 test("nothing heard means every word missed", () => {
   assert.deepEqual(kinds("hello there"), ["missed", "missed"]);
+});
+
+test("British script spelling matches Deepgram's US spelling", () => {
+  assert.deepEqual(kinds("grey chips", "gray", "chips"), ["match", "match"]);
+  assert.deepEqual(kinds("practise colour", "practice", "color"), ["match", "match"]);
 });

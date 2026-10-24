@@ -4,7 +4,8 @@ import type { Line } from "./lines.ts";
 export type WordMark = { script: string; kind: "ok" | "missed" | "unclear"; heard?: string; start?: number; end?: number };
 export type Insert = { afterWord: number; text: string; kind: "filler" | "added" };
 export type Pause = { afterWord: number; seconds: number };
-export type LineResult = { words: WordMark[]; inserts: Insert[]; pauses: Pause[]; wpm: number | null; heard: HeardWord[] };
+// restAfter: the break after this line before the next one (capped), counted as speaking time like any talk.
+export type LineResult = { words: WordMark[]; inserts: Insert[]; pauses: Pause[]; wpm: number | null; heard: HeardWord[]; restAfter: number };
 export type ReadyStatus = {
   ready: boolean;
   missed: number;
@@ -31,10 +32,14 @@ export function speedLabel(wpm: number | null): "too fast" | "too slow" | null {
   return wpm > TOO_FAST ? "too fast" : wpm < TOO_SLOW ? "too slow" : null;
 }
 
-function wordsPerMinute(heard: HeardWord[]): number | null {
-  if (heard.length < 2) return null;
-  const seconds = heard[heard.length - 1].end - heard[0].start;
-  return seconds > 0 ? Math.round((heard.length / seconds) * 60) : null;
+// Speaking time includes the natural break after a sentence; the 110-165 wpm band assumes those breaks.
+function speakingSeconds(r: Pick<LineResult, "heard" | "restAfter">): number {
+  return r.heard.length < 2 ? 0 : r.heard.at(-1)!.end - r.heard[0].start + r.restAfter;
+}
+
+function wordsPerMinute(r: Pick<LineResult, "heard" | "restAfter">): number | null {
+  const seconds = speakingSeconds(r);
+  return seconds > 0 ? Math.round((r.heard.length / seconds) * 60) : null;
 }
 
 function inScript(line: Line, text: string): boolean {
@@ -42,7 +47,7 @@ function inScript(line: Line, text: string): boolean {
 }
 
 // steps use script indexes local to this line.
-export function markLine(line: Line, steps: Step[]): LineResult {
+export function markLine(line: Line, steps: Step[], restAfter = 0): LineResult {
   const words: WordMark[] = [];
   const added: { afterWord: number; words: string[] }[] = [];
   const pauses: Pause[] = [];
@@ -90,7 +95,7 @@ export function markLine(line: Line, steps: Step[]): LineResult {
       inserts.push({ afterWord: group.afterWord, text: w, kind: FILLERS.has(w) && !inScript(line, w) ? "filler" : "added" });
     }
   }
-  return { words, inserts, pauses, wpm: wordsPerMinute(heard), heard };
+  return { words, inserts, pauses, wpm: wordsPerMinute({ heard, restAfter }), heard, restAfter };
 }
 
 // Aligns a whole take against the whole script, then gives each step to the line of its script word.
@@ -117,7 +122,14 @@ export function markTake(lines: Line[], heard: HeardWord[]): LineResult[] {
     waiting.length = 0;
   }
   perLine[lines.length - 1].push(...waiting);
-  return lines.map((line, i) => markLine(line, perLine[i]));
+
+  const heardIn = perLine.map((steps) => steps.flatMap((s) => (s.kind === "missed" ? [] : [s.heard])));
+  return lines.map((line, i) => {
+    const last = heardIn[i].at(-1);
+    const next = heardIn.slice(i + 1).find((h) => h.length)?.[0];
+    const rest = last && next ? Math.min(LONG_PAUSE, Math.max(0, next.start - last.end)) : 0;
+    return markLine(line, perLine[i], rest);
+  });
 }
 
 export function isReady(results: LineResult[]): ReadyStatus {
@@ -127,9 +139,9 @@ export function isReady(results: LineResult[]): ReadyStatus {
   const fillers = count((r) => r.inserts.filter((x) => x.kind === "filler").length);
   const added = count((r) => r.inserts.filter((x) => x.kind === "added").length);
   const pauses = count((r) => r.pauses.length);
-  // Overall speed over speaking time only (line by line), so it means the same for take 1 and take 2.
-  const spoken = results.filter((r) => r.heard.length >= 2);
-  const seconds = spoken.reduce((sum, r) => sum + (r.heard.at(-1)!.end - r.heard[0].start), 0);
+  // Summed line by line (not first word to last), so it means the same for take 1 and a take 2 built from retakes.
+  const spoken = results.filter((r) => speakingSeconds(r) > 0);
+  const seconds = spoken.reduce((sum, r) => sum + speakingSeconds(r), 0);
   const wpm = seconds > 0 ? Math.round((spoken.reduce((sum, r) => sum + r.heard.length, 0) / seconds) * 60) : null;
 
   const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;

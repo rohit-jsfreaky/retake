@@ -5,16 +5,19 @@ import { MarkedLine } from "./MarkedLine";
 export function ReviewStep({
   lines,
   results,
+  audioUrl,
   onReadAgain,
   onEdit,
 }: {
   lines: Line[];
   results: LineResult[];
+  audioUrl: string | null;
   onReadAgain: () => void;
   onEdit: () => void;
 }) {
   const status = isReady(results);
   const speed = speedLabel(status.wpm);
+  const heard = results.flatMap((r) => r.heard);
   return (
     <section className="flex flex-col gap-4">
       <div className="sticky top-0 flex flex-wrap items-center gap-x-6 gap-y-2 border-b border-line bg-background py-3">
@@ -29,6 +32,12 @@ export function ReviewStep({
         <span className="font-mono">
           {status.wpm ?? "–"} wpm{speed && ` · ${speed}`}
         </span>
+      </div>
+      <div className="flex flex-col gap-2 rounded-lg border border-line bg-panel p-4">
+        <span className="text-sm font-semibold">Your recording</span>
+        {audioUrl ? <audio controls src={audioUrl} className="w-full" /> : <span className="text-sm text-muted">Not kept after a reload.</span>}
+        <span className="text-sm font-semibold">What the listener heard ({heard.length} words)</span>
+        <p className="text-muted">{heard.length ? heard.map((w) => w.word).join(" ") : "Nothing."}</p>
       </div>
       <p className="text-sm text-muted">
         Red: the listener missed it or heard another word (hover to see what). Amber: heard, but not clearly. Grey chips:

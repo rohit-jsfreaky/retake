@@ -13,11 +13,14 @@ export default function Home() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [take1, setTake1] = useState<LineResult[] | null>(null);
+  const [take1Audio, setTake1Audio] = useState<string | null>(null);
   const lines = useMemo(() => splitScript(script), [script]);
 
   async function onTake(audio: Blob) {
     setBusy(true);
     setError("");
+    if (take1Audio) URL.revokeObjectURL(take1Audio);
+    setTake1Audio(URL.createObjectURL(audio));
     try {
       setTake1(markTake(lines, await listen(audio)));
       setStep("review");
@@ -36,7 +39,7 @@ export default function Home() {
       {step === "read" && <ReadStep lines={lines} busy={busy} onBack={() => setStep("script")} onTake={onTake} />}
       {error && <p className="mt-4 text-muted">{error}</p>}
       {step === "review" && take1 && (
-        <ReviewStep lines={lines} results={take1} onReadAgain={() => setStep("read")} onEdit={() => setStep("script")} />
+        <ReviewStep lines={lines} results={take1} audioUrl={take1Audio} onReadAgain={() => setStep("read")} onEdit={() => setStep("script")} />
       )}
     </main>
   );

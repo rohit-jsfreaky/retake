@@ -87,7 +87,8 @@ Headline (what + who), text box, live "N lines · N words", 600-word limit, Star
 PRD ref: `prd.md > Script input`, `prd.md > States and Boundaries` (empty script).
 
 ### Recorder — `components/useRecorder.ts`
-A React hook around `getUserMedia` + `MediaRecorder`: start, stop → `Blob`, elapsed time, mic-blocked error. Used by
+A React hook around `getUserMedia` + `MediaRecorder`: start, stop → `Blob`, elapsed time, mic-blocked error, the mic's
+name and a live level (Web Audio `AnalyserNode`) with a "quiet for 2 s" flag. Used by
 the Read step and by line retakes.
 PRD ref: `prd.md > Recording a take`, `prd.md > States and Boundaries` (mic blocked).
 
@@ -107,7 +108,8 @@ PRD ref: `prd.md > Recording a take`, `prd.md > Retake a line`.
 ### Lines — `lib/lines.ts`
 `splitScript(text): Line[]` — blank lines and sentence ends (`.` `?` `!`) start a new line. Each line keeps its
 display text and its normalised word list. `normalise(word)`: lowercase, strip punctuation and hyphens, keep
-apostrophes.
+apostrophes. British spellings map to US spelling ("grey" → "gray"), because Deepgram writes US
+spelling — a fixed list of common words.
 Plain numbers in the script ("3", "200", "$200") are spelled out as words in the word list ("three", "two
 hundred") because Deepgram returns spoken numbers as words when `smart_format` is off; the display text keeps the
 digits. Years ("2026" said "twenty twenty six") may still show as missed — accepted for the POC.
@@ -129,13 +131,16 @@ line) and `isReady(results): ReadyStatus`. Rules (starting values, tuned in the 
   the script.
 - **Added:** every other `added` word.
 - **Long pause:** gap between two heard words `≥ 1.2 s`, where the earlier script word does not end a sentence.
-- **Speed:** heard words ÷ (last end − first start) × 60. "Too fast" above 165 wpm, "too slow" below 110 wpm.
+- **Speed:** heard words ÷ speaking time × 60, where a line's speaking time = its first word start → last word end
+  **plus the break before the next line** (capped at 1.2 s); overall = summed over lines. "Too fast" above 165 wpm,
+  "too slow" below 110 wpm — that band assumes the natural breaks are counted.
 - **Ready:** no missed, no fillers, no long pauses, overall speed inside the band. Unclear words are shown but don't
   block Ready.
 PRD ref: `prd.md > The marked script`, `prd.md > Ready check`. Tests: `lib/marks.test.ts`.
 
 ### Review step — `components/ReviewStep.tsx`
-Sticky summary bar (counts + Ready status), legend, "Take 1 / Compare" switch, list of `MarkedLine`.
+Sticky summary bar (counts + Ready status), take 1 audio player + "What the listener heard" transcript, legend,
+"Take 1 / Compare" switch, list of `MarkedLine`.
 PRD ref: `prd.md > The marked script`, `prd.md > Ready check`.
 
 ### Marked line — `components/MarkedLine.tsx`
@@ -171,7 +176,8 @@ type Line = { index: number; text: string; words: string[]; shown: string[]; end
 type WordMark = { script: string; kind: 'ok' | 'missed' | 'unclear'; heard?: string; start?: number; end?: number }
 type Insert = { afterWord: number; text: string; kind: 'filler' | 'added' }
 type Pause = { afterWord: number; seconds: number }
-type LineResult = { words: WordMark[]; inserts: Insert[]; pauses: Pause[]; wpm: number | null; heard: HeardWord[] }
+type LineResult = { words: WordMark[]; inserts: Insert[]; pauses: Pause[]; wpm: number | null; heard: HeardWord[];
+  restAfter: number }   // the break after the line, counted in its speed
 type Session = {
   script: string
   lines: Line[]
