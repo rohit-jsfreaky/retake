@@ -27,6 +27,8 @@ export async function POST(request: Request) {
   } catch {
     return Response.json({ error: "Couldn't reach the listener." }, { status: 502 });
   }
+  // Deepgram answers 400 "corrupt or unsupported data" for a recording with no sound in it (Stop pressed at once).
+  if (res.status === 400) return Response.json({ error: "No speech in this recording." }, { status: 422 });
   if (!res.ok) {
     console.error("deepgram", res.status, await res.text());
     return Response.json({ error: "The listener failed." }, { status: 502 });

@@ -99,7 +99,8 @@ PRD ref: `prd.md > Recording a take`.
 ### Listen API route — `app/api/listen/route.ts`
 `POST` with the raw audio body and its `Content-Type`. Rejects empty bodies and bodies over 5 MB. Forwards to
 Deepgram (see **External Services**) and returns `{ words }` (Deepgram's `results.channels[0].alternatives[0].words`)
-or `{ error }` with a status code.
+or `{ error }` with a status code. Deepgram's 400 ("corrupt or unsupported data" — what a soundless recording gets)
+becomes 422 "No speech in this recording." so the page can say "nothing heard" instead of "try again".
 PRD ref: `prd.md > Recording a take`, `prd.md > Retake a line`.
 
 ### Listen client — `lib/listen.ts`
@@ -160,7 +161,8 @@ plays its own clip.
 PRD ref: `prd.md > Compare takes`.
 
 ### Storage — `lib/storage.ts`
-`load()` / `save(session)` with `localStorage` key `retake:v1`, wrapped in try/catch (works without it).
+`load()` / `save({ script, take1, take2 })` with `localStorage` key `retake:v1`, wrapped in try/catch (works without
+it). Lines are re-made from the script on load.
 PRD ref: `prd.md > States and Boundaries` (what persists).
 
 ### Sample — `public/sample/sample.json` + dev-only export
@@ -265,7 +267,8 @@ a 4-minute opus recording is about 1 MB). Docs: https://vercel.com/docs/function
 - **Mic blocked or no mic** → message on how to allow it + "Try the sample instead".
 - **Deepgram or network fails** → "Couldn't check this take. Your recording is kept — try again." The blob stays in
   memory and Try again re-sends it.
-- **Silent / nothing heard** (empty `words`) → "We didn't hear anything — check your mic and try again."
+- **Silent / nothing heard** (empty `words`, or an empty body / Deepgram 400 for a soundless file) → "We didn't hear
+  anything — check your mic and try again." The previous review stays.
 - **Public API route gets abused and burns credit** → 5 MB body cap on the route; the sample never calls the API, so
   judges can always see the product.
 

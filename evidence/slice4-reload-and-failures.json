@@ -1,0 +1,12 @@
+{
+  "what": "Slice 4 real browser checks (Chrome via Playwright, real /api/listen -> Deepgram).",
+  "date": "2026-10-24",
+  "listener_down": "fetch to /api/listen forced to fail once -> alert 'Couldn't check this take. Your recording is kept — try again.' + Try again; Try again re-sent the kept recording (3rd /api/listen call) and opened Review: 'Not yet: 1 missed word, 1 filler, 1 long pause'.",
+  "reload": "After a reload the Review step came back from localStorage 'retake:v1': same summary, 'listener -> Heard: reader', 'Not kept after a reload.' shown, 0 Play buttons.",
+  "nothing_heard": {
+    "deepgram_direct": "A 110-byte Chrome webm with no sound -> Deepgram 400 {err_msg: 'Bad Request: failed to process audio: corrupt or unsupported data'} (request_id 01a16df6-e010-7eb0-9f71-d2b16f2b82d4).",
+    "fix": "/api/listen maps Deepgram 400 to 422 'No speech in this recording.'; the page shows the nothing-heard message instead of 'try again'.",
+    "ui_after_fix": "We didn't hear anything — check your mic and try again. (the earlier review stays saved)"
+  },
+  "mic_blocked": "getUserMedia rejected with NotAllowedError -> 'Retake can't use your microphone. Allow it in the address bar, then press Record again.'"
+}

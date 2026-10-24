@@ -40,7 +40,7 @@ one-line commit message, and waits for "next".
   Learner check: Retake a red line cleanly — it turns clean in take 2, other lines stay, and Play on each side plays just that line.
   Commit: `Retake a line and compare take 1 with take 2`
 
-- [ ] **4. Survives reload, and failures don't lose the take**
+- [x] **4. Survives reload, and failures don't lose the take**
   Becomes usable: Script and results stay after a reload (play buttons off with a note). Mic blocked, nothing heard, and listener down each show their plain message; Try again re-sends the kept recording.
   Why now: Real use breaks here first; the happy path must exist before its edges.
   PRD ref: `prd.md > States and Boundaries`
@@ -97,3 +97,4 @@ Activity mode:
 - Playback decodes the recording with Web Audio (`lib/play.ts`) instead of seeking one `<audio>` — Chrome's MediaRecorder webm has no seek index, so jumping to a line's time is unreliable; a decoded buffer plays exact segments.
 - The heard word is shown under each red word and any word can be clicked to hear it — after checkpoint 1 the learner felt red words were "said clearly"; hearing exactly what the listener heard answers that (learner agreed).
 - Line speed is labelled only from 6 heard words — a 4-word greeting showed "too slow" because one breath swings a short line's rate.
+- `/api/listen` turns Deepgram's 400 into 422 "No speech" — a recording with no sound reaches Deepgram as a ~110-byte file that it rejects as "corrupt or unsupported data"; without this, a silent take said "try again", which can never help.
