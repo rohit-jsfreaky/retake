@@ -6,11 +6,13 @@ export function ScriptStep({
   lines,
   onChange,
   onStart,
+  onSample,
 }: {
   script: string;
   lines: Line[];
   onChange: (s: string) => void;
   onStart: () => void;
+  onSample: () => void;
 }) {
   const words = countWords(lines);
   const tooLong = words > MAX_WORDS;
@@ -36,6 +38,9 @@ export function ScriptStep({
         onClick={onStart}
       >
         Start reading
+      </button>
+      <button className="self-start text-accent underline" onClick={onSample}>
+        Try the sample — a real marked take, no mic needed
       </button>
     </section>
   );

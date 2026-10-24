@@ -12,9 +12,11 @@ export function ReviewStep({
   take1Audio,
   take2Audio,
   busyLine,
+  sample,
   onRetake,
   onReadAgain,
   onEdit,
+  onExport,
 }: {
   lines: Line[];
   take1: LineResult[];
@@ -25,6 +27,8 @@ export function ReviewStep({
   onRetake: (line: number, audio: Blob) => void;
   onReadAgain: () => void;
   onEdit: () => void;
+  sample: boolean;
+  onExport?: () => void;
 }) {
   const [view, setView] = useState<"take" | "compare">("take");
   const latest = currentTake(take1, take2);
@@ -35,6 +39,12 @@ export function ReviewStep({
 
   return (
     <section className="flex flex-col gap-4">
+      {sample && (
+        <p className="rounded-lg border border-line bg-panel p-3 text-sm">
+          <strong>Sample</strong> — the maker&apos;s own voice: take 1{retakes > 0 && `, then ${retakes} retaken ${retakes === 1 ? "line" : "lines"}`}.
+          Everything below is the real listener result for these recordings.
+        </p>
+      )}
       <div className="sticky top-0 z-10 flex flex-wrap items-center gap-x-6 gap-y-2 border-b border-line bg-background py-3">
         <strong className={status.ready ? "text-accent" : ""}>
           {status.ready ? "Ready to record" : `Not yet: ${status.left.join(", ")}`}
@@ -87,18 +97,31 @@ export function ReviewStep({
               wholeClip={Boolean(take2[i])}
               label={take2[i] ? "Retaken" : undefined}
               busy={busyLine !== null}
-              onRetake={(audio) => onRetake(i, audio)}
+              onRetake={sample ? undefined : (audio) => onRetake(i, audio)}
             />
           ))}
         </div>
       )}
       <div className="flex gap-4">
-        <button className="rounded-lg bg-accent px-5 py-2.5 text-white" onClick={onReadAgain}>
-          Read it all again
-        </button>
-        <button className="text-muted underline" onClick={onEdit}>
-          Edit script
-        </button>
+        {sample ? (
+          <button className="rounded-lg bg-accent px-5 py-2.5 text-white" onClick={onEdit}>
+            Try it with your own script
+          </button>
+        ) : (
+          <>
+            <button className="rounded-lg bg-accent px-5 py-2.5 text-white" onClick={onReadAgain}>
+              Read it all again
+            </button>
+            <button className="text-muted underline" onClick={onEdit}>
+              Edit script
+            </button>
+          </>
+        )}
+        {onExport && (
+          <button className="ml-auto text-sm text-muted underline" onClick={onExport}>
+            Export session as sample (dev)
+          </button>
+        )}
       </div>
     </section>
   );

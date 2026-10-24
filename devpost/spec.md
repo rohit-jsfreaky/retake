@@ -169,7 +169,9 @@ PRD ref: `prd.md > States and Boundaries` (what persists).
 The sample is a real session of the learner's voice: script, Deepgram's raw `words` for take 1 and for each retaken
 line, and the audio as base64 data URLs. The app runs the same aligner + marker on it at load, so the sample is the
 real pipeline, not a picture. Made in dev with an "Export session as sample" button shown only when
-`process.env.NODE_ENV === 'development'`. Labelled "Sample" in the UI.
+`process.env.NODE_ENV === 'development'`. Labelled "Sample" in the UI; no Retake buttons in the sample, it never
+overwrites the visitor's saved session, and "Try it with your own script" leaves it. Code: `lib/sample.ts`
+(`sessionFromSample`, `exportSample`).
 PRD ref: `prd.md > Sample mode`.
 
 ## Data Model
@@ -221,6 +223,7 @@ retake/
 │   ├── listen.ts             # client call to /api/listen
 │   ├── play.ts               # decode a take, play a line or word segment
 │   ├── storage.ts            # localStorage load/save
+│   ├── sample.ts             # sample.json → session; dev export
 │   ├── lines.test.ts         # node --test (sentences, number words)
 │   ├── align.test.ts         # node --test
 │   └── marks.test.ts         # node --test

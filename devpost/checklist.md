@@ -59,6 +59,7 @@ one-line commit message, and waits for "next".
   Verify (mechanical): `npm run build` passes; with the mic blocked and no network call to `/api/listen`, the sample shows marks, plays lines and compares takes.
   Learner check: Record your real sample, export it, then open the app in a fresh tab and press "Try the sample".
   Commit: `Add sample mode from a real recorded session`
+  Status: mechanism built, verified and committed with a test session (`evidence/slice5-sample-roundtrip.json`); box stays open until the learner exports his real `public/sample/sample.json` and it is checked.
 
 ## Hands-on Checkpoints
 

@@ -2,7 +2,7 @@
 import type { Line } from "@/lib/lines";
 import { useRecorder } from "./useRecorder";
 
-export function ReadStep({ lines, busy, onBack, onTake }: { lines: Line[]; busy: boolean; onBack: () => void; onTake: (audio: Blob) => void }) {
+export function ReadStep({ lines, busy, onBack, onTake, onSample }: { lines: Line[]; busy: boolean; onBack: () => void; onTake: (audio: Blob) => void; onSample: () => void }) {
   const { recording, seconds, blocked, micName, level, quiet, start, stop } = useRecorder();
 
   return (
@@ -36,7 +36,14 @@ export function ReadStep({ lines, busy, onBack, onTake }: { lines: Line[]; busy:
           <span>Mic: {micName || "default"}{quiet && " — we can't hear you. Check which mic Chrome is using (the mic icon in the address bar)."}</span>
         </div>
       )}
-      {blocked && <p className="text-muted">Retake can&apos;t use your microphone. Allow it in the address bar, then press Record again.</p>}
+      {blocked && (
+        <p className="text-muted">
+          Retake can&apos;t use your microphone. Allow it in the address bar, then press Record again.{" "}
+          <button className="text-accent underline" onClick={onSample}>
+            Try the sample instead
+          </button>
+        </p>
+      )}
     </section>
   );
 }

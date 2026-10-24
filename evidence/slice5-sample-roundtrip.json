@@ -1,0 +1,15 @@
+{
+  "what": "Slice 5 round trip with a TEST session (Windows-voice clips, real Deepgram words): dev 'Export session as sample' -> sample.json (20 take-1 words, 1 retaken line with 15 words, webm audio as data URLs) placed temporarily at public/sample/sample.json, then opened as a judge. The test file was deleted afterwards; the real sample is the maker's own voice.",
+  "date": "2026-10-24",
+  "judge_view": {
+    "mic": "blocked (getUserMedia rejected)",
+    "first_screen": "Practise the exact words you have to say in English, before you say them.",
+    "banner": "Sample — the maker's own voice: take 1, then 1 retaken line. Everything below is the real listener result for these recordings.",
+    "retake_buttons": 0,
+    "compare_shows_same_as_take_1": true,
+    "playback_buffers_seconds": [10.5, 5.58],
+    "api_listen_calls": 0,
+    "own_saved_session_after_sample": "{\"script\":\"\",\"take1\":null,\"take2\":{}} (unchanged)",
+    "try_with_own_script": "back to an empty script box"
+  }
+}
