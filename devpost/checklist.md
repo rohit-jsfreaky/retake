@@ -100,3 +100,4 @@ Activity mode:
 - Line speed is labelled only from 6 heard words — a 4-word greeting showed "too slow" because one breath swings a short line's rate.
 - `/api/listen` turns Deepgram's 400 into 422 "No speech" — a recording with no sound reaches Deepgram as a ~110-byte file that it rejects as "corrupt or unsupported data"; without this, a silent take said "try again", which can never help.
 - The last line's speed now uses the reader's usual break between sentences — it had none, so it always looked faster (the real sample's last line showed 278 wpm).
+- Landing page added at `/` and the app moved to `/practice` (`?sample` opens the sample) — the learner wanted a full product landing page in the visual direction he chose once the core worked; fonts and colours in `spec.md > Look and Feel` were replaced to match.

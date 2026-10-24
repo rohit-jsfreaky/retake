@@ -10,7 +10,7 @@ export function ReadStep({ lines, busy, onBack, onTake, onSample }: { lines: Lin
       <button className="self-start text-muted underline" onClick={onBack} disabled={recording || busy}>
         Back to script
       </button>
-      <div className="flex flex-col gap-3 text-2xl leading-relaxed">
+      <div className="flex flex-col gap-3 font-read text-2xl leading-relaxed">
         {lines.map((l) => (
           <p key={l.index}>{l.text}</p>
         ))}

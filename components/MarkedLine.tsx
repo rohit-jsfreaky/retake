@@ -75,7 +75,7 @@ export function MarkedLine({
   return (
     <div className="flex flex-col gap-2 border-b border-line py-4">
       {label && <span className="text-xs font-semibold uppercase tracking-wide text-muted">{label}</span>}
-      <p className="text-2xl leading-[2.4]">
+      <p className="font-read text-2xl leading-[2.4]">
         {between(-1)}
         {groups.map((g) => {
           const marks = g.map((i) => result.words[i]);

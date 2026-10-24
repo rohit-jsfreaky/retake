@@ -60,21 +60,20 @@ Agent recommendation, accepted when this spec is approved:
 - Tests: `npm test` → `node --test lib/*.test.ts`.
 
 ## Look and Feel
-Carries `prd.md > Look and Feel`. Learner decision (24 Oct): build the core first with these as starting values; the
-learner designs the final UI himself mid-build, once the core works. Agent recommendation for the starting values:
-- **Light, calm, structured.** White page `#FFFFFF`, soft panel `#F5F7FA`, borders `#E4E7EC`, ink `#101828`,
-  secondary text `#475467`.
-- **One accent: deep ink-blue `#1F3A8A`** for the primary button and active step only. No gradients, no glow, no
-  cream, no orange accent.
-- **Mark colours are the only strong colours:** missed = red text + light red underline (`#D92D20` / `#FEE4E2`),
-  unclear = amber underline (`#B54708` / `#FEF0C7`), fillers/added = grey chips (`#F2F4F7`, text `#344054`), pause =
-  thin grey marker with seconds in Geist Mono, speed = small neutral badge.
-- **Type:** script text in Atkinson Hyperlegible Next, large (about 22–26 px, line-height 1.6) — built for easy
-  reading, which is the job. UI in Geist. Numbers and timings in Geist Mono.
-- **Density:** spacious; the script column is centred and about 70 characters wide. Summary bar sticky on top in
-  Review.
-- **Copy tone:** plain, short, human. "Listening back…", "Heard: pro duck", "Ready to record". No tech words on screen.
-- **Icons:** Untitled UI, one line weight, monochrome, on neutral tiles.
+Carries `prd.md > Look and Feel`. Learner decision (24 Oct): once the core worked, the learner chose the visual
+direction for the landing page himself.
+- **Landing page (`/`):** warm off-white page `#FCF9F7`, near-black ink `#030302`, a sky-blue hero card with
+  paper-collage illustrations and halftone clouds, floating pill navigation, large rounded paper-grain cards in soft blue
+  `#B8CAF5`, green `#9BD8A9` and yellow `#FDE99B`, black pill primary buttons and frosted-glass secondary buttons,
+  scroll-in fade/lift motion (`motion`), a looping use-case strip. Every product example on the page is rendered by the
+  real marking code from `public/sample/sample.json` — no mock data.
+- **Type:** headings in Newsreader (serif, italic for quotes), UI in Hanken Grotesk, the wordmark in Dela Gothic One,
+  the script text in Atkinson Hyperlegible Next (built for easy reading, which is the job), numbers in Geist Mono.
+- **Mark colours stay the only strong colours inside the product:** missed = red text + light red underline
+  (`#D92D20` / `#FEE4E2`), unclear = amber underline (`#B54708` / `#FEF0C7`), fillers/added = grey chips (`#F2F4F7`,
+  text `#344054`), pause = thin marker with seconds in Geist Mono, speed = small neutral badge.
+- **Icons:** Untitled UI (`@untitledui/icons`, MIT), one line weight, monochrome.
+- **Copy tone:** plain, short, human. No tech words on screen.
 
 ## Components
 
@@ -206,7 +205,8 @@ type Session = {
 retake/
 ├── app/
 │   ├── layout.tsx            # fonts (next/font), page title + description
-│   ├── page.tsx              # session state + Script → Read → Review steps
+│   ├── page.tsx              # landing page (examples rendered from the real sample)
+│   ├── practice/page.tsx     # the app: session state + Script → Read → Review steps (?sample opens the sample)
 │   ├── globals.css           # Tailwind + colour tokens from Look and Feel
 │   └── api/listen/route.ts   # POST audio → Deepgram → { words }
 ├── components/
@@ -227,7 +227,9 @@ retake/
 │   ├── lines.test.ts         # node --test (sentences, number words)
 │   ├── align.test.ts         # node --test
 │   └── marks.test.ts         # node --test
+├── components/landing/       # landing page parts: Nav, Reveal (scroll-in motion), sample-data
 ├── public/sample/sample.json # real sample session (words + audio)
+├── public/landing/           # landing illustrations (paper-collage images made with ChatGPT image generation)
 ├── devpost/                  # Devpost learning workspace
 ├── .env.example              # DEEPGRAM_API_KEY=
 ├── LICENSE                   # MIT
