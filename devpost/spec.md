@@ -215,7 +215,8 @@ retake/
 │   ├── ReviewStep.tsx        # summary bar, legend, Take 1 / Compare switch
 │   ├── MarkedLine.tsx        # one line: marks, chips, pauses, speed, play, retake
 │   ├── CompareView.tsx
-│   └── useRecorder.ts        # mic + MediaRecorder hook
+│   ├── useRecorder.ts        # mic + MediaRecorder hook
+│   └── ui.tsx                # shared pill buttons, cards, step header, window frame
 ├── lib/
 │   ├── lines.ts              # split script into lines + normalised words
 │   ├── align.ts              # word alignment (pure)

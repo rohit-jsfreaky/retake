@@ -2,6 +2,8 @@
 import type { Line } from "@/lib/lines";
 import { lineSpeedLabel, type LineResult, type WordMark } from "@/lib/marks";
 import { playClip } from "@/lib/play";
+import { Microphone01, PlayCircle } from "@untitledui/icons";
+import { Pill } from "./ui";
 import { useRecorder } from "./useRecorder";
 
 const WORD_STYLE: Record<WordMark["kind"], string> = {
@@ -73,8 +75,8 @@ export function MarkedLine({
   const speed = lineSpeedLabel(result);
   const marked = result.words.some((w) => w.kind !== "ok") || result.inserts.length > 0 || result.pauses.length > 0;
   return (
-    <div className="flex flex-col gap-2 border-b border-line py-4">
-      {label && <span className="text-xs font-semibold uppercase tracking-wide text-muted">{label}</span>}
+    <div className="flex flex-col gap-2 border-b border-line py-5 last:border-b-0">
+      {label && <span className="self-start rounded-full bg-[#DCFAE6] px-2.5 py-0.5 text-xs font-medium text-[#067647]">{label}</span>}
       <p className="font-read text-2xl leading-[2.4]">
         {between(-1)}
         {groups.map((g) => {
@@ -105,32 +107,31 @@ export function MarkedLine({
           );
         })}
       </p>
-      <div className="flex flex-wrap items-center gap-3 text-sm">
+      <div className="flex flex-wrap items-center gap-2 text-sm">
         {result.wpm !== null && (
-          <span className="rounded border border-line px-2 py-0.5 font-mono text-xs text-muted">
+          <span className={`rounded-full px-2.5 py-1 font-mono text-xs ${speed ? "bg-[#FEF0C7] text-[#B54708]" : "bg-panel text-muted"}`}>
             {result.wpm} wpm{speed && ` · ${speed}`}
           </span>
         )}
         {audioUrl && first && (
-          <button className="text-accent underline" onClick={playLine}>
-            Play
-          </button>
+          <Pill variant="ghost" size="sm" className="h-8 px-3" onClick={playLine}>
+            <PlayCircle size={16} /> Play
+          </Pill>
         )}
-        {onRetake &&
-          (recorder.recording ? (
-            <button className="rounded bg-accent px-3 py-1 text-white" onClick={async () => onRetake(await recorder.stop())}>
-              Stop · {recorder.seconds}s
-            </button>
-          ) : (
-            <button
-              className={marked ? "rounded bg-accent px-3 py-1 text-white disabled:opacity-40" : "text-muted underline disabled:opacity-40"}
-              disabled={busy}
-              onClick={recorder.start}
-            >
-              {busy ? "Listening back…" : "Retake line"}
-            </button>
-          ))}
-        {recorder.blocked && <span className="text-muted">Retake can&apos;t use your microphone. Allow it in the address bar.</span>}
+        {onRetake && (
+          <span className="ml-auto">
+            {recorder.recording ? (
+              <Pill variant="danger" size="sm" onClick={async () => onRetake(await recorder.stop())}>
+                <span className="size-2 rounded-sm bg-white" /> Stop · {recorder.seconds}s
+              </Pill>
+            ) : (
+              <Pill variant={marked ? "dark" : "ghost"} size="sm" disabled={busy} onClick={recorder.start}>
+                <Microphone01 size={16} /> {busy ? "Listening back…" : "Retake line"}
+              </Pill>
+            )}
+          </span>
+        )}
+        {recorder.blocked && <span className="w-full text-[#B42318]">Retake can&apos;t use your microphone. Allow it in the address bar.</span>}
       </div>
     </div>
   );

@@ -15,15 +15,17 @@ export function Nav() {
           <Logo />
         </Link>
         <div className="mx-auto hidden items-center gap-4 text-base md:flex">
-          <a href="#how" className="hover:opacity-60">How it works</a>
-          <a href="#listen" className="hover:opacity-60">Features</a>
-          <a href="#who" className="hover:opacity-60">Who it&apos;s for</a>
-          <Link href={SAMPLE} className="hover:opacity-60">Sample</Link>
+          <Link href="/#how" className="hover:opacity-60">How it works</Link>
+          <Link href="/#listen" className="hover:opacity-60">Features</Link>
+          <Link href="/#who" className="hover:opacity-60">Who it&apos;s for</Link>
+          {/* Plain <a>: a full load, so ?sample opens even when already on /practice. */}
+          <a href={SAMPLE} className="hover:opacity-60">Sample</a>
         </div>
         <div className="ml-auto flex items-center gap-3 md:ml-0">
-          <Link href={SAMPLE} className="hidden text-base hover:opacity-60 sm:block">
+          {/* Plain <a>: a full load, so ?sample opens even when already on /practice. */}
+          <a href={SAMPLE} className="hidden text-base hover:opacity-60 sm:block">
             See a take
-          </Link>
+          </a>
           <Link
             href={PRACTISE}
             className="rounded-full bg-accent px-3.5 py-2 text-base font-medium text-white shadow-[0_1px_3px_rgba(0,0,0,0.1),0_1px_2px_rgba(0,0,0,0.1)] hover:bg-accent-hover"

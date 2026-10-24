@@ -16,16 +16,19 @@ export function CompareView({
   take2Audio: Record<number, string>;
 }) {
   return (
-    <div className="grid grid-cols-2 gap-x-8">
-      <span className="text-sm font-semibold">Take 1</span>
-      <span className="text-sm font-semibold">Take 2</span>
+    <div className="flex flex-col">
+      <div className="grid grid-cols-2 gap-8 pt-4 text-sm font-medium text-muted">
+        <span>TAKE 1</span>
+        <span>TAKE 2</span>
+      </div>
       {lines.map((line, i) => (
-        <div key={line.index} className="contents">
+        // The row draws the divider, so the two sides line up.
+        <div key={line.index} className="grid grid-cols-2 gap-8 border-b border-line last:border-b-0 [&>div]:border-b-0">
           <MarkedLine line={line} result={take1[i]} audioUrl={take1Audio} wholeClip={false} />
           {take2[i] ? (
             <MarkedLine line={line} result={take2[i]} audioUrl={take2Audio[i] ?? null} wholeClip />
           ) : (
-            <p className="border-b border-line py-4 text-muted">Same as take 1</p>
+            <p className="self-center py-5 text-subtle">Same as take 1</p>
           )}
         </div>
       ))}

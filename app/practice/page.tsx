@@ -3,6 +3,9 @@ import { useEffect, useMemo, useState } from "react";
 import { ScriptStep } from "@/components/ScriptStep";
 import { ReadStep } from "@/components/ReadStep";
 import { ReviewStep } from "@/components/ReviewStep";
+import { Nav } from "@/components/landing/Nav";
+import { Pill } from "@/components/ui";
+import { AlertCircle } from "@untitledui/icons";
 import { align } from "@/lib/align";
 import { listen, ListenError } from "@/lib/listen";
 import { splitScript } from "@/lib/lines";
@@ -141,14 +144,17 @@ export default function Home() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-4xl px-6 py-12">
+    <>
+    <Nav />
+    <main className="mx-auto w-full max-w-[1080px] px-4 pb-24 pt-32">
       {error && (
-        <div role="alert" className="mb-6 flex flex-wrap items-center gap-4 rounded-lg border border-[#FDA29B] bg-[#FEF3F2] p-4">
-          <span>{error}</span>
+        <div role="alert" className="mx-auto mb-10 flex max-w-[640px] flex-wrap items-center gap-4 rounded-2xl bg-[#FEF3F2] p-5 shadow-[var(--shadow-float)]">
+          <AlertCircle size={20} className="text-[#D92D20]" />
+          <span className="flex-1">{error}</span>
           {failed && (
-            <button className="rounded bg-accent px-3 py-1 text-white disabled:opacity-40" disabled={busy || busyLine !== null} onClick={tryAgain}>
+            <Pill size="sm" disabled={busy || busyLine !== null} onClick={tryAgain}>
               Try again
-            </button>
+            </Pill>
           )}
         </div>
       )}
@@ -176,5 +182,6 @@ export default function Home() {
         />
       )}
     </main>
+    </>
   );
 }
