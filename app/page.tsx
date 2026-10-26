@@ -1,14 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import cloud from "@/public/landing/cloud.png";
-import collage from "@/public/landing/hero-collage.png";
-import useDemo from "@/public/landing/use-demo.png";
-import useInterview from "@/public/landing/use-interview.png";
-import usePodcast from "@/public/landing/use-podcast.png";
-import useSales from "@/public/landing/use-sales.png";
-import useTalk from "@/public/landing/use-talk.png";
-import useTeam from "@/public/landing/use-team.png";
+import cloud from "@/public/landing/cloud.webp";
+import collage from "@/public/landing/hero-collage.webp";
+import useDemo from "@/public/landing/use-demo.webp";
+import useInterview from "@/public/landing/use-interview.webp";
+import usePodcast from "@/public/landing/use-podcast.webp";
+import useSales from "@/public/landing/use-sales.webp";
+import useTalk from "@/public/landing/use-talk.webp";
+import useTeam from "@/public/landing/use-team.webp";
 import {
   AlertCircle,
   Briefcase01,
