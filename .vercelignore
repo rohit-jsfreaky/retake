@@ -1,0 +1,15 @@
+# Upload only what the app needs.
+.env*
+!.env.example
+CLAUDE.md
+PROGRESS.md
+devpost/learner-profile.md
+.agents
+.claude
+agent
+skills-lock.json
+.playwright-mcp
+.next
+node_modules
+public/sample/*
+!public/sample/sample.json
