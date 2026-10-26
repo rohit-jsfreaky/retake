@@ -56,7 +56,7 @@ Agent recommendation, accepted when this spec is approved:
 - Online (chosen — judges should try it without cloning): Vercel, deployed by the learner's own push to `main` through
   Vercel's GitHub integration. The learner adds `DEEPGRAM_API_KEY` in the Vercel project settings.
 - **Shared (26 Oct 2026):** live app https://retake-gules.vercel.app · sample https://retake-gules.vercel.app/practice?sample ·
-  public repo https://github.com/rohit-jsfreaky/retake · demo video: _added by the learner after upload_.
+  public repo https://github.com/rohit-jsfreaky/retake · demo video https://youtu.be/mj6VaaO0gqs.
   `.vercelignore` limits uploads to the app; Vercel deploys each push to `main`.
 - Anyone can open the sample with no mic and no key cost.
 - Required anyway: public GitHub repo + 1–3 minute demo video (recorded by the learner, with Retake on screen).

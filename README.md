@@ -7,7 +7,7 @@
 Practise the exact words you have to say in English. Read your script once, see which words didn't land,
 and retake only those lines.
 
-[**Try it live**](https://retake-gules.vercel.app) · [**Open a real marked take**](https://retake-gules.vercel.app/practice?sample) (no mic, no sign-up) · [How it works](#how-it-works) · [Run it locally](#run-it-locally)
+[**Watch the demo**](https://youtu.be/mj6VaaO0gqs) · [**Try it live**](https://retake-gules.vercel.app) · [**Open a real marked take**](https://retake-gules.vercel.app/practice?sample) (no mic, no sign-up) · [How it works](#how-it-works) · [Run it locally](#run-it-locally)
 
 <img src="docs/screenshots/landing.webp" alt="Retake showing a script with missed words marked in red and the word the listener heard underneath" width="900" />
 
