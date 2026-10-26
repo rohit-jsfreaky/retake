@@ -64,7 +64,7 @@ one-line commit message, and waits for "next".
 ## Hands-on Checkpoints
 
 - [x] Early usable behavior explored — after slice 2: learner records his real script, judges the marks, tunes thresholds, and then designs the final UI himself
-- [ ] Final kick-the-tires exploration and feedback completed
+- [x] Final kick-the-tires exploration and feedback completed
 
 Checkpoint 1 (24 Oct): learner's first real take came back almost empty (mic not picking him up) → added mic name +
 level bar, recording playback and the heard transcript; second take worked and surfaced two bugs ("grey"/"gray",
@@ -73,19 +73,27 @@ building; the UI design comes later.
 
 ## Final Review
 
-- [ ] Final review complete — feedback resolved and learner confirms ready to ship
+Feedback after checkpoint 1, all done and verified:
+- [x] Landing page in the learner's chosen visual direction, with real sample data (commit 1712dae)
+- [x] App restyled to match, then rebuilt as one window with a sidebar, and the landing hero renders that same window (6b4dd87, 7f6d8f5)
+- [x] Images served as WebP (3230908); README with real screenshots (45c134c)
+- [x] Live on Vercel at https://retake-gules.vercel.app, deployed from `main` (public repo rohit-jsfreaky/retake)
+
+Final check (26 Oct): the learner tested the full flow and said "testing is done"; `npm test` 24/24, lint and build clean.
+
+- [x] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map
 
-- [ ] Learning activity complete — guided route, focused alternative, prior practice connected, or brief recap
-- [ ] Optional edit and transfer reflection addressed — offered/declined/already covered/not applicable as appropriate
-- [ ] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
+- [x] Learning activity complete — guided route, focused alternative, prior practice connected, or brief recap
+- [x] Optional edit and transfer reflection addressed — offered/declined/already covered/not applicable as appropriate
+- [x] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
 
-Activity and evidence:
-Route and stops:
-Edit outcome:
-Reflection:
-Activity mode:
+Activity and evidence: Prior practice connected. The learner's goal (word timings, per-word confidence, word alignment) was met by doing, not a separate tour: in checkpoint 1 he read the heard transcript and word marks from his own takes, and saw "fillers" heard as "pillers" and a near-empty take traced to the mic. Evidence: `evidence/slice1-chrome-webm-call.json`, `evidence/slice2-marked-take.json`, Revisions above, `lib/align.test.ts`.
+Route and stops: Reference route in the map (not toured interactively): `components/useRecorder.ts` `stop()` → `app/api/listen/route.ts` `POST` → `lib/marks.ts` `markTake` / `lib/align.ts` `align` → `components/MarkedLine.tsx`.
+Edit outcome: Not applicable. The learner shaped the product through feedback during the build instead.
+Reflection: Not asked separately; the learner chose to go straight to shipping.
+Activity mode: Brief evidence-based recap plus the app map (static; written from the finished code at commit a625cd7).
 
 ## Revisions
 

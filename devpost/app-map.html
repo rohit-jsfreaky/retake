@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retake app map</title>
+<style>
+  :root { --ink:#101828; --muted:#475467; --line:#e4e7ec; --panel:#f6f7f9; --red:#d92d20; --redbg:#fee4e2; --accent:#1f3a8a; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#fff; color:var(--ink); font:16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width:860px; margin:0 auto; padding:40px 20px 64px; }
+  h1 { font-size:32px; margin:0 0 4px; } h2 { font-size:22px; margin:40px 0 8px; } h3 { font-size:17px; margin:0 0 4px; }
+  p, li { color:var(--muted); } strong, h1, h2, h3 { color:var(--ink); }
+  code { font:14px/1.4 ui-monospace, Consolas, monospace; background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:1px 6px; color:var(--ink); }
+  .meta { font-size:14px; } .stop { border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin:12px 0; }
+  .stop b { display:inline-block; min-width:28px; height:28px; line-height:28px; text-align:center; border-radius:50%; background:var(--ink); color:#fff; margin-right:8px; font-size:14px; }
+  svg { width:100%; height:auto; border:1px solid var(--line); border-radius:14px; background:var(--panel); }
+  table { width:100%; border-collapse:collapse; font-size:15px; } td { border-top:1px solid var(--line); padding:8px 6px; vertical-align:top; color:var(--muted); }
+  td:first-child { color:var(--ink); width:42%; }
+  details { border:1px solid var(--line); border-radius:12px; padding:10px 14px; margin-top:12px; } summary { cursor:pointer; color:var(--ink); }
+  .mark { color:var(--red); background:var(--redbg); border-radius:4px; padding:0 4px; text-decoration:underline; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Retake: app map</h1>
+  <p class="meta">A take-home guide to where things live. A snapshot of commit <code>a625cd7</code> (26 Oct 2026); the code may move on after this.</p>
+
+  <h2>What the app does</h2>
+  <p>You paste a script, read it once, and Retake marks the words a listener would miss, for example <span class="mark">fillers</span> heard as "pillers".
+  It has three main pieces: the <strong>page</strong> in your browser (recording and drawing the marks), one small <strong>server route</strong> that
+  passes your audio to <strong>Deepgram</strong> (the listener), and the <strong>comparer</strong> in <code>lib/</code>, which lines up your script with what was heard.</p>
+
+  <h2>One action, end to end: Stop → marked script</h2>
+  <svg viewBox="0 0 820 230" role="img" aria-labelledby="flow-title">
+    <title id="flow-title">Pressing Stop sends the recording to the listen route, Deepgram returns heard words, markTake lines them up with the script, and MarkedLine draws the result.</title>
+    <g font-family="system-ui, sans-serif" font-size="13" fill="#101828">
+      <rect x="10" y="20" width="170" height="70" rx="12" fill="#fff" stroke="#e4e7ec"/><text x="24" y="48" font-weight="600">You press Stop</text><text x="24" y="70" fill="#475467">ReadStep · useRecorder</text>
+      <rect x="220" y="20" width="170" height="70" rx="12" fill="#fff" stroke="#e4e7ec"/><text x="234" y="48" font-weight="600">/api/listen</text><text x="234" y="70" fill="#475467">route.ts · POST</text>
+      <rect x="430" y="20" width="170" height="70" rx="12" fill="#eef2fb" stroke="#1f3a8a"/><text x="444" y="48" font-weight="600">Deepgram</text><text x="444" y="70" fill="#475467">words + times + confidence</text>
+      <rect x="430" y="140" width="170" height="70" rx="12" fill="#fff" stroke="#e4e7ec"/><text x="444" y="168" font-weight="600">markTake → align</text><text x="444" y="190" fill="#475467">lib/marks.ts · lib/align.ts</text>
+      <rect x="220" y="140" width="170" height="70" rx="12" fill="#fff" stroke="#e4e7ec"/><text x="234" y="168" font-weight="600">MarkedLine</text><text x="234" y="190" fill="#475467">red / amber / chips</text>
+      <rect x="10" y="140" width="170" height="70" rx="12" fill="#fff" stroke="#e4e7ec"/><text x="24" y="168" font-weight="600">Saved in browser</text><text x="24" y="190" fill="#475467">lib/storage.ts</text>
+    </g>
+    <g stroke="#101828" stroke-width="1.6" fill="none" marker-end="url(#a)">
+      <path d="M180 55 H216"/><path d="M390 55 H426"/><path d="M515 90 V136"/><path d="M430 175 H394"/><path d="M220 175 H184"/>
+    </g>
+    <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#101828"/></marker></defs>
+  </svg>
+
+  <h2>Reference route (3 stops)</h2>
+  <p>A route to follow in your editor. Search for the names in <code>code</code>.</p>
+  <div class="stop"><h3><b>1</b>Recording ends: <code>components/useRecorder.ts</code></h3>
+    <p><code>stop()</code> turns the mic recording into a WebM/Opus <code>Blob</code>. <code>app/practice/page.tsx</code> → <code>onTake</code> receives it and calls <code>listen()</code> in <code>lib/listen.ts</code>.</p></div>
+  <div class="stop"><h3><b>2</b>The listener: <code>app/api/listen/route.ts</code></h3>
+    <p><code>POST</code> checks the body (audio, not empty, at most 5 MB), sends it to Deepgram with the key kept on the server, and returns only the <code>words</code>. A soundless file comes back as "No speech".</p></div>
+  <div class="stop"><h3><b>3</b>The comparer: <code>lib/marks.ts</code> → <code>markTake</code></h3>
+    <p>It calls <code>align()</code> in <code>lib/align.ts</code>, a word-level edit distance that labels each word match, swap, missed or added. It then gives each step to its line, and <code>markLine</code> turns steps into marks. <code>components/MarkedLine.tsx</code> draws them.</p></div>
+
+  <h2>To change this, start here</h2>
+  <table>
+    <tr><td>How strict the marks are</td><td><code>UNCLEAR_BELOW</code>, <code>LONG_PAUSE</code>, <code>TOO_SLOW</code>, <code>TOO_FAST</code> in <code>lib/marks.ts</code></td></tr>
+    <tr><td>Which words count as fillers</td><td><code>FILLERS</code> in <code>lib/marks.ts</code></td></tr>
+    <tr><td>British → US spellings</td><td><code>SPELLING</code> in <code>lib/lines.ts</code></td></tr>
+    <tr><td>How a script splits into lines</td><td><code>splitScript</code> in <code>lib/lines.ts</code></td></tr>
+    <tr><td>The sample judges see</td><td><code>public/sample/sample.json</code> (made with "Export session as sample" in dev)</td></tr>
+    <tr><td>Landing page text and images</td><td><code>app/page.tsx</code>, <code>public/landing/</code></td></tr>
+  </table>
+
+  <h2>A practice to reuse</h2>
+  <p><strong>Prove the risky outside service with one real call, then make what it returns visible.</strong>
+  Slice 1 sent one real Chrome recording to Deepgram before any marking code existed (<code>evidence/slice1-chrome-webm-call.json</code>). That showed WebM is accepted
+  and numbers come back as words, which led to the number fix in <code>lib/lines.ts</code>. Later, the first real take came back almost empty, and the marks alone couldn't
+  explain why. Adding the recording player and the "What the listener heard" transcript made the cause visible: the mic, not the comparer (see Revisions in <code>devpost/checklist.md</code>).
+  On another project with an external API, make one recorded real call first and show the raw response on screen while you build.</p>
+  <details><summary>The tests that pin the comparer down</summary>
+    <p><code>lib/align.test.ts</code>, <code>lib/lines.test.ts</code> and <code>lib/marks.test.ts</code> cover one swapped word, a missing word, an added "um", a repeated word, numbers, pauses, speed and Ready. Run them with <code>npm test</code>.</p>
+  </details>
+
+  <h2>Run it again</h2>
+  <p><code>npm install</code>, put <code>DEEPGRAM_API_KEY=…</code> in <code>.env.local</code>, then <code>npm run dev</code> and open <code>http://localhost:3000</code>.
+  Live: <code>https://retake-gules.vercel.app</code>. Reopen this map by opening <code>devpost/app-map.html</code> in any browser.</p>
+</main>
+</body>
+</html>
